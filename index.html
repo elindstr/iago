@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:,">.
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <meta http-equiv="Cache-Control" content="max-age=0, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0" />
+  <title>Iago Othello</title>
+</head>
+<body>
+
+  <div class="title_div">
+    <span class="title">Iago</span>
+  </div>
+  <div class="top_buttons_div">
+    <input id="newgame_btn" class="newgame_btn" type="button" value="New Game" onclick="NewGame()"><br>
+    <input id="back_btn" class="back_btn" type="button" value="Back" onclick="BackBtn()">
+  </div>
+
+  <div class="main_canvas_div">
+    <canvas id="main_canvas" class="main_canvas" width="400" height="490"></canvas>
+  </div>
+
+  <div id="a">
+    <input id="black_robot_button" class="back_btn" type="button" value="Robot" onclick="BlackRobotBtn()">
+    <span> &#8195; Black:</span>
+    <span id="BlackCount">0</span>
+    <span id="BlackIndicator"></span>
+  </div>
+  <div id="b">
+    <input id="white_robot_button" class="back_btn" type="button" value="Robot" onclick="WhiteRobotBtn()">
+    <span> &#8195; White:</span>
+    <span id="WhiteCount">0</span>
+    <span id="WhiteIndicator"></span>
+  </div>
+
+  <script src="./assets/js/game.js"></script>
+  <script src="./assets/js/robot.js"></script>
+  <script src="./assets/js/robot_quads.js"></script>
+
+</body>
+</html>
