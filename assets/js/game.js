@@ -42,6 +42,11 @@ function NewGame () {
   if (WhiteRobotOn && BlackRobotOn) {
     GoRobot()
   }
+
+    //manual dehover on mobile
+    document.getElementById("newgame_btn").className = 'input-dehover'
+    console.log("dehovering")
+
 }
 function RefreshBoard () {
   Draw_Board()
@@ -545,17 +550,15 @@ function BackBtn() {
   else {
     NewGame ()
   }
-}
 
+    //manual dehover on mobile
+    document.getElementById("back_btn").className = 'input-dehover'
+    console.log("dehovering")
+}
 
 //Robot Buttons
 var BlackRobotOn = false
 function BlackRobotBtn() {
-
-  //manual dehover on mobile
-  document.getElementById("black_robot_button").className = 'input-dehover'
-  document.getElementById("white_robot_button").className = 'input-dehover'
-  console.log("dehovering")
 
   //change status and trigger play if it is the robot's turn
   if (BlackRobotOn == true) {
