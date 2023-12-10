@@ -46,17 +46,12 @@ function NewGame () {
   if (WhiteRobotOn && BlackRobotOn) {
     GoRobot()
   }
-
-    //manual dehover on mobile
-    document.getElementById("newgame_btn").className = 'input_dehover'
-
 }
+
 function RefreshBoard () {
   Draw_Board()
   Draw_Tiles()
   Draw_InfoBar()
-
-
 }
 
 function Init_Board () {
@@ -576,9 +571,6 @@ function BackBtn() {
   else {
     NewGame ()
   }
-
-    //manual dehover on mobile
-    document.getElementById("back_btn").className = 'input_dehover'
 }
 
 //Robot Buttons
