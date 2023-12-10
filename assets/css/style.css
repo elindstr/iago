@@ -85,6 +85,5 @@ input:hover {
 }
 .input_dehover {    /*manual dehover on mobile*/
   background-color: #555;
-  font-size: 50px;
 }
 
