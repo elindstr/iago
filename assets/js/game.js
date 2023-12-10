@@ -202,12 +202,15 @@ buttons.forEach(button => {
   })
   button.addEventListener("touchstart", function(e){
     button.className = "input_hover";
+    e.preventDefault()
   });
   button.addEventListener("touchend", function(e){
     button.className = "input_dehover";
+    e.preventDefault()
   });
   button.addEventListener("touchcancel", function(e){
     button.className = "input_dehover";
+    e.preventDefault()
   });
 });
 
