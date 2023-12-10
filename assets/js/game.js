@@ -115,16 +115,16 @@ function Draw_InfoBar () {
   if (PlayerTurn == -1) {
     //document.getElementById("black_div").style.backgroundColor = "#D3D3D3"
     //document.getElementById("white_div").style.backgroundColor = "white"
-    document.getElementById("BlackIndicator").innerHTML = "<--"
-    document.getElementById("WhiteIndicator").innerHTML = ""
+    document.getElementById("BlackIndicator").style.visibility = "visible";
+    document.getElementById("WhiteIndicator").style.visibility = "hidden";
 
 
   }
   else {
     //document.getElementById("black_div").style.backgroundColor = "white"
     //document.getElementById("white_div").style.backgroundColor = "#D3D3D3"
-    document.getElementById("BlackIndicator").innerHTML = ""
-    document.getElementById("WhiteIndicator").innerHTML = "<--"
+    document.getElementById("BlackIndicator").style.visibility = "hidden";
+    document.getElementById("WhiteIndicator").style.visibility = "visible";
   }
 }
 
@@ -561,11 +561,13 @@ function BlackRobotBtn() {
     BlackRobotOn = false
     //document.getElementById("black_robot_button").value = "Turn Robot On"
     document.getElementById("black_robot_button").style.backgroundColor = '';
+    document.getElementById("black_robot_button").value = "Human"
   }
   else {
     BlackRobotOn = true
     //document.getElementById("black_robot_button").value = "Turn Robot Off"
     document.getElementById("black_robot_button").style.backgroundColor = '#C8C8C8'
+    document.getElementById("black_robot_button").value = "Robot"
     if (PlayerTurn == -1) {
       GoRobot()
     }
@@ -577,11 +579,14 @@ function WhiteRobotBtn() {
     WhiteRobotOn = false
     //document.getElementById("white_robot_button").value = "Turn Robot On"
     document.getElementById("white_robot_button").style.backgroundColor = ''
+    document.getElementById("white_robot_button").value = "Human"
+    
   }
   else {
     WhiteRobotOn = true
     //document.getElementById("white_robot_button").value = "Turn Robot Off"
     document.getElementById("white_robot_button").style.backgroundColor = '#C8C8C8'
+    document.getElementById("white_robot_button").value = "Robot"
     if (PlayerTurn == 1) {
       GoRobot()
     }

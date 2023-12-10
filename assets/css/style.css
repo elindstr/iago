@@ -1,122 +1,81 @@
-html, body {}
 
-.title_div {
-	position: relative;
-	left: 20px;
-	display: inline-block;
-}
-.title {
-	font-size: 50;
-}
-
-.top_buttons_div {
-	position: relative;
-	left: 160px;
-	display: inline-block;
+/*@font-face {
+  font-family: 'Nova_Square';
+  src: url(./Nova_Square/NovaSquare-Regular.ttf);
+}*/
+@font-face {
+  font-family: 'Orbitron';
+  src: url(./Orbitron/Orbitron-VariableFont_wght.ttf);
 }
 
-.main_canvas_div {
-	position: relative;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.bottom_div {
-	position: relative;
+body {
+  font-family: 'Tahoma', sans-serif;
+  background-color: #333;
 }
 
-.black_div {
-	position: relative;
-	display: inline-block;
-	left: 20px;
-}
-.white_div {
-	position: relative;
-	display: inline-block;
-	left: 200px;
+main {
+  margin: 10px auto;
+  max-width: 600px;
 }
 
-.newgame_btn {
-	width: 100px;
+header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #333;
+  color: white;
 }
-.back_btn {
-	width: 100px;
+h1 {
+  flex: 2;
+  font-family: 'Orbitron';
+  font-size: 4em;
+  text-align: center;
+  display: inline;
+}
+#newgame_btn {
+  flex: 1;
+  margin-top: 20px;
+}
+#back_btn {
+  flex: 1;
+  margin-top: 20px;
 }
 
-/* The switch - the box around the slider */
-.switch1 {
-  position: relative;
-  left: 20px;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+canvas {
+  display: block;
+  margin: 10px auto;
 }
-.switch1_label_BAK {
-  position: relative;
-  left: 20px;
-  display: inline-block;
-  width: 100px;
+
+.info_box {
+  display: flex;
+  justify-content: space-between;
+  background-color: #333;
+  color: white;
 }
-.switch2 {
-  position: relative;
-  left: 200px;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+.info_box > section {
+  flex: 1;
+  text-align: center;
 }
-.switch2_label_BAK {
-  position: relative;
-  left: 160px;
-  display: inline-block;
-  width: 100px;
+.info_box span {
+  font-size: 2em;
 }
-/* Hide default HTML checkbox */
-.switch1 input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.switch2 input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-/* The slider */
-.slider {
-  position: absolute;
+
+input {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: #555;
+  color: #fff;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  font-size: 1.5em;
+  font-family: 'Tahoma', sans-serif;
+  border: none;
+  outline: none;
+  transition: background-color 0.3s ease;
 }
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-input:checked + .slider {
-  background-color: #2196F3;
-}
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-.slider.round:before {
-  border-radius: 50%;
+input:hover {
+  background-color: #777;
 }
