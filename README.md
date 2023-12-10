@@ -17,8 +17,8 @@ Iago provides gameplay options of human v. human, human v. robot, or (look out!)
 <table>
   <tr>
     <td>
-      <img src="media/mobile 2023-12-08.jpeg" alt="screenshot of IAGO web app (2024-12-08)" width="300px"/><br>
-      <i>screenshot of IAGO web app (2024-12-08)</i>
+      <img src="media/mobile 2023-12-09.png" alt="screenshot of IAGO web app (2024-12-08)" width="300px"/><br>
+      <i>screenshot of IAGO web app (2024-12-09)</i>
     </td>
     <td>
       <img src="media/iPhone 11 Pro Max - 2020-09-25 at 14.59.32.png" alt="screenshot of IAGO iOS app (2020-09-25)" width="300px"/><br>
