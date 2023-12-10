@@ -19,7 +19,7 @@ body {
 }
 
 main {
-  margin: 10px auto;
+  margin: 5px auto;
   max-width: 600px;
 }
 
@@ -28,6 +28,7 @@ header {
   justify-content: space-between;
   background-color: #333;
   color: white;
+  margin-bottom: 10px;
 }
 h1 {
   flex: 2;
@@ -36,18 +37,15 @@ h1 {
   text-align: center;
   display: inline;
 }
-#newgame_btn {
-  flex: 1;
-  margin-top: 20px;
-}
-#back_btn {
-  flex: 1;
-  margin-top: 20px;
+header input {
+  flex: .6;
+  margin-top: 30px;
+  height: 90%;
 }
 
 canvas {
   display: block;
-  margin: 10px auto;
+  margin: 0px auto;
 }
 
 .info_box {
@@ -63,9 +61,12 @@ canvas {
 .info_box span {
   font-size: 2em;
 }
-
+#black_info, #white_info {
+  border: 3px dashed #777;
+  border-radius: 10%;
+}
 input {
-  padding: 8px 12px;
+  padding: 7px 10px;
   border-radius: 10px;
   background-color: #555;
   color: #fff;
@@ -75,7 +76,10 @@ input {
   border: none;
   outline: none;
   transition: background-color 0.3s ease;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 input:hover {
   background-color: #777;
 }
+

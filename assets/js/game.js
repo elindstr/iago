@@ -14,8 +14,6 @@ var Cols = 8
 var tile_size = 20
 var tile_size_for_drawing = tile_size * .9
 var bottomspace = 200
-var board_width
-var board_height
 var Black_Count = 0
 var White_Count = 0
 var PlayerTurn = -1
@@ -27,25 +25,23 @@ resizeCanvas()
 window.addEventListener('resize', resizeCanvas, false);
 window.addEventListener('orientationchange', resizeCanvas, false);
 function resizeCanvas() {
-  //console.log("resizing")
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight - bottomspace
-  if (canvas.width > canvas.height){
-    canvas.width = canvas.height
-  } else
-  {
-    canvas.height = canvas.width
-  }
-  tile_size = Math.round((canvas.width) / (Rows)) - 2
-  tile_size_for_drawing = tile_size * .9
+  canvas.width = Math.min(window.innerWidth, window.innerHeight - bottomspace);
+  canvas.height = canvas.width;
 
-  RefreshBoard()
+  tile_size = Math.ceil(canvas.width / Rows) - 2;
+  tile_size_for_drawing = tile_size * 0.9;
+
+  RefreshBoard();
 }
 
 //initialize new game
 function NewGame () {
   Init_Board()
   RefreshBoard()
+
+  if (WhiteRobotOn && BlackRobotOn) {
+    GoRobot()
+  }
 }
 function RefreshBoard () {
   Draw_Board()
@@ -112,19 +108,13 @@ function Draw_InfoBar () {
   update_counts()
   document.getElementById("BlackCount").innerHTML = Black_Count
   document.getElementById("WhiteCount").innerHTML = White_Count
-  if (PlayerTurn == -1) {
-    //document.getElementById("black_div").style.backgroundColor = "#D3D3D3"
-    //document.getElementById("white_div").style.backgroundColor = "white"
-    document.getElementById("BlackIndicator").style.visibility = "visible";
-    document.getElementById("WhiteIndicator").style.visibility = "hidden";
-
-
+  if (PlayerTurn == -1) {  
+    document.getElementById("black_info").style.border = "3px dashed #777"
+    document.getElementById("white_info").style.border = "none"
   }
   else {
-    //document.getElementById("black_div").style.backgroundColor = "white"
-    //document.getElementById("white_div").style.backgroundColor = "#D3D3D3"
-    document.getElementById("BlackIndicator").style.visibility = "hidden";
-    document.getElementById("WhiteIndicator").style.visibility = "visible";
+    document.getElementById("black_info").style.border = "none"
+    document.getElementById("white_info").style.border = "3px dashed #777"
   }
 }
 
@@ -175,7 +165,7 @@ function Draw_Tiles() {
     var last_row = state_history[state_history.length-1][10]
     ctx.font = "15px Ariel";
     ctx.fillStyle = "red";
-    ctx.fillText("\327", last_col*tile_size+(tile_size/2)-3, last_row*tile_size+(tile_size/2)+3);
+    ctx.fillText("\xd7", last_col*tile_size+(tile_size/2)-3, last_row*tile_size+(tile_size/2)+3);
   }
 }
 
@@ -468,54 +458,58 @@ function CheckForPass() {
   return NoMoves
 }
 
-function Next_Move(located_col, located_row) {  //place piece; flipping already performed; change turns; check for moves; handle passes and end game sequence
-  PlayerTurn = PlayerTurn * -1                // change turns
-  StateState(located_col, located_row)                                // save state for back button
-  RefreshBoard()
+function Next_Move(located_col, located_row) {
+  PlayerTurn = PlayerTurn * -1;
+  StateState(located_col, located_row); 
+  RefreshBoard();
 
-  var endgame = false
-  if (CheckForPass() == true) {               //check for pass
-    console.log("pass")
-    PlayerTurn = PlayerTurn * -1              //if pass, change turns again
-    RefreshBoard()
+  if (CheckForPass()) {
+    console.log("pass", PlayerTurn)
+    PlayerTurn = PlayerTurn * -1; // change turns again
 
-                                              //BUG: robot v robot ends on double pass by same color
-    if (CheckForPass() == true) {             //check for end game
-      console.log("game over")
+    //BUG: fatal error when robots are playing and there is a pass
 
-      //stop robots
-      endgame = true
+    if (CheckForPass()) {
+      console.log("double pass", PlayerTurn)
+      console.log("game over");
+
+      // stop robots
+      PlayerTurn = 0
+      console.log("PlayerTurn: ", PlayerTurn)
 
       // display credits
-      if (Black_Count>White_Count) {
-        document.getElementById("BlackIndicator").innerHTML = "<--Black Wins!"
-        document.getElementById("WhiteIndicator").innerHTML = ""
+      if (Black_Count > White_Count) {  //todo: improve game over message
+        document.getElementById("black_info").style.border = "3px dashed #777"
+        document.getElementById("white_info").style.border = "none"
+      } else if (Black_Count < White_Count) {
+        document.getElementById("black_info").style.border = "none"
+        document.getElementById("white_info").style.border = "3px dashed #777"
+      } else if (Black_Count == White_Count) {
+        document.getElementById("black_info").style.border = "3px dashed #777"
+        document.getElementById("white_info").style.border = "3px dashed #777"
       }
-      else if (Black_Count<White_Count) {
-        document.getElementById("BlackIndicator").innerHTML = ""
-        document.getElementById("WhiteIndicator").innerHTML = "<--White Wins!"
+    } else {                                              //BUG when robots are passing?
+      if (PlayerTurn == -1 && BlackRobotOn) {
+        GoRobot();
+      } else if (PlayerTurn == 1 && WhiteRobotOn) {
+        GoRobot();
       }
-      else if (Black_Count==White_Count) {
-        document.getElementById("BlackIndicator").innerHTML = "<--Tie!"
-        document.getElementById("WhiteIndicator").innerHTML = "<--Tie!"
-      }
-
     }
-  }
-
-  if (endgame == false) {
-    if ((PlayerTurn == -1) && (BlackRobotOn == true)) {
-      GoRobot()
-    }
-    else if ((PlayerTurn == 1) && (WhiteRobotOn == true)) {
-      GoRobot()
+  } else {
+    if (PlayerTurn == -1 && BlackRobotOn) {
+      GoRobot();
+    } else if (PlayerTurn == 1 && WhiteRobotOn) {
+      GoRobot();
     }
   }
 }
 
+
 //Save State & Back Button
 var moves_history = []
-function StateState(located_col, located_row) {
+function StateState(located_col, located_row) {       //BUG: not saving state correctly on passes
+  console.log("saving state: ", PlayerTurn, located_col, located_row)
+
   tilec = JSON.parse(JSON.stringify(tile))
   state_history.push([])
   for (col = 0; col < Cols; col++){          //record state (for back button)

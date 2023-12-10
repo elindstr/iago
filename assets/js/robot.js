@@ -6,14 +6,14 @@ var disc_count
 var move_count
 
 function GoRobot() {
-  console.log("robot thinking")
-  state_to_evaluatea = state_history[state_history.length-1]
+  console.log("robot thinking", PlayerTurn)
+  state_to_evaluatea = state_history[state_history.length-1]    //BUG: When a robot passes, this incorrectly shows no potential moves. 
   state_to_evaluate = JSON.parse(JSON.stringify(state_to_evaluatea))
-
+ 
 
   //get potential moves and states
   let [moves, states, your_disc_count, your_move_count, oppo_disc_count, oppo_move_count] = get_state_stats(state_to_evaluate)       //find potential moves
-  //console.log(moves, states)
+  console.log(moves, states)
 
   //get robot move
   var [robotMoveX, robotMoveY] = RobotMiddleQuads(state_to_evaluate, moves)
@@ -38,7 +38,7 @@ function get_state_stats(state_to_evaluate) {
 }
 
 function get_moves_and_states(state_to_evaluate) {
-  potential_PlayerTurn = state_to_evaluate[8]
+  potential_PlayerTurn = state_to_evaluate[8]           //BUG: when robots pass, the current turn gets messed up
   moves = []
   //console.log("turn ", potential_PlayerTurn)
   potential_moves_a = []
