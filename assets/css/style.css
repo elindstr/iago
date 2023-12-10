@@ -8,6 +8,11 @@
   src: url(./Orbitron/Orbitron-VariableFont_wght.ttf);
 }
 
+/*prevent mobile double tap zooming*/
+body {
+  touch-action: none;
+}
+
 * {
   margin: 0;
   padding: 0;
