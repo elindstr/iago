@@ -188,6 +188,7 @@ canvasElem.addEventListener("touchend", function(e){
   mouse_x = touchobj.clientX - rect.left;
   mouse_y = touchobj.clientY - rect.top;
   Locate_Move(mouse_x, mouse_y)
+  button.className = "input_dehover";
   e.preventDefault()
 }, false)
 
@@ -204,10 +205,7 @@ buttons.forEach(button => {
     e.preventDefault();
     button.className = "input_hover";
   });
-  button.addEventListener("touchend", function(e){
-    e.preventDefault();
-    button.className = "input_dehover";
-  });
+  //touchend handled above
   button.addEventListener("touchcancel", function(e){
     e.preventDefault();
     button.className = "input_dehover";
