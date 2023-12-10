@@ -83,4 +83,7 @@ input {
 input:hover {
   background-color: #777;
 }
+#input-dehover {    /*manual dehover on mobile*/
+  background-color: #555;
+}
 

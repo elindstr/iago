@@ -187,7 +187,7 @@ canvasElem.addEventListener("touchend", function(e){
   e.preventDefault()
 }, false)
 
-//todo: detect mobile touch moves
+//todo: need to de-hover on mobile touch events  
 
 
 //Handle Moves
@@ -551,15 +551,19 @@ function BackBtn() {
 //Robot Buttons
 var BlackRobotOn = false
 function BlackRobotBtn() {
+
+  //manual dehover on mobile
+  document.getElementById("black_robot_button").className = 'input-dehover'
+  document.getElementById("white_robot_button").className = 'input-dehover'
+
+  //change status and trigger play if it is the robot's turn
   if (BlackRobotOn == true) {
     BlackRobotOn = false
-    //document.getElementById("black_robot_button").value = "Turn Robot On"
     document.getElementById("black_robot_button").style.backgroundColor = '';
     document.getElementById("black_robot_button").value = "Human"
   }
   else {
     BlackRobotOn = true
-    //document.getElementById("black_robot_button").value = "Turn Robot Off"
     document.getElementById("black_robot_button").style.backgroundColor = '#C8C8C8'
     document.getElementById("black_robot_button").value = "Robot"
     if (PlayerTurn == -1) {
@@ -571,14 +575,12 @@ var WhiteRobotOn = false
 function WhiteRobotBtn() {
   if (WhiteRobotOn == true) {
     WhiteRobotOn = false
-    //document.getElementById("white_robot_button").value = "Turn Robot On"
     document.getElementById("white_robot_button").style.backgroundColor = ''
     document.getElementById("white_robot_button").value = "Human"
     
   }
   else {
     WhiteRobotOn = true
-    //document.getElementById("white_robot_button").value = "Turn Robot Off"
     document.getElementById("white_robot_button").style.backgroundColor = '#C8C8C8'
     document.getElementById("white_robot_button").value = "Robot"
     if (PlayerTurn == 1) {
