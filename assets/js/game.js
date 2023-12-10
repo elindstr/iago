@@ -191,8 +191,22 @@ canvasElem.addEventListener("touchend", function(e){
   e.preventDefault()
 }, false)
 
-//todo: need to de-hover on mobile touch events  
-
+//manually de-hover to accomodate stupid mobile non-hover capability  
+document.getElementById("newgame_btn").addEventListener("mouseover", function(e){
+  document.getElementById("newgame_btn").className = "input_hover"
+})
+document.getElementById("newgame_btn").addEventListener("mouseout", function(e){
+  document.getElementById("newgame_btn").className = "input_dehover"
+})
+document.getElementById("newgame_btn").addEventListener("touchstart", function(e){
+  newgameBtn.className = "input_hover";
+});
+document.getElementById("newgame_btn").addEventListener("touchend", function(e){
+  newgameBtn.className = "input_dehover";
+});
+document.getElementById("newgame_btn").addEventListener("touchcancel", function(e){
+  newgameBtn.className = "input_dehover";
+});
 
 //Handle Moves
 function Locate_Move(mouse_x, mouse_y) {
