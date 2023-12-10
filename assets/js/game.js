@@ -44,8 +44,7 @@ function NewGame () {
   }
 
     //manual dehover on mobile
-    document.getElementById("newgame_btn").className = 'input-dehover'
-    console.log("dehovering")
+    document.getElementById("newgame_btn").className = 'input_dehover'
 
 }
 function RefreshBoard () {
@@ -552,8 +551,7 @@ function BackBtn() {
   }
 
     //manual dehover on mobile
-    document.getElementById("back_btn").className = 'input-dehover'
-    console.log("dehovering")
+    document.getElementById("back_btn").className = 'input_dehover'
 }
 
 //Robot Buttons
