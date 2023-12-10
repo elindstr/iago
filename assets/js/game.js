@@ -6,6 +6,8 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 var ctx = canvas.getContext("2d");
 
+//todo: implement DPR to improve res
+
 //global variables
 var tile = []
 var state_history = []
@@ -25,9 +27,11 @@ resizeCanvas()
 window.addEventListener('resize', resizeCanvas, false);
 window.addEventListener('orientationchange', resizeCanvas, false);
 function resizeCanvas() {
+  //fix orientation
   canvas.width = Math.min(window.innerWidth, window.innerHeight - bottomspace);
   canvas.height = canvas.width;
 
+  //define tile size
   tile_size = Math.ceil(canvas.width / Rows) - 2;
   tile_size_for_drawing = tile_size * 0.9;
 
@@ -51,6 +55,8 @@ function RefreshBoard () {
   Draw_Board()
   Draw_Tiles()
   Draw_InfoBar()
+
+
 }
 
 function Init_Board () {
@@ -191,7 +197,7 @@ canvasElem.addEventListener("touchend", function(e){
   e.preventDefault()
 }, false)
 
-//manually de-hover to accomodate stupid mobile non-hover capability
+//manually de-hover to accommodate stupid mobile non-hover capability
 var buttons = document.querySelectorAll('header input');
 buttons.forEach(button => {  
   button.addEventListener("mouseover", (e) => {
@@ -491,11 +497,9 @@ function Next_Move(located_col, located_row) {
   if (CheckForPass()) {
     console.log("pass", PlayerTurn)
     PlayerTurn = PlayerTurn * -1; // change turns again
-
-    //BUG: fatal error when robots are playing and there is a pass; caused by saved
-    //state recording player turn;
-    //solution: on pass, update last save state player turn here?
-
+    
+    //changing history so that robots can handle passing
+    state_history[state_history.length-1][8] = state_history[state_history.length-1][8] * -1
 
     if (CheckForPass()) {
       console.log("double pass", PlayerTurn)
