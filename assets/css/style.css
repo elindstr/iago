@@ -53,6 +53,8 @@ canvas {
   justify-content: space-between;
   background-color: #333;
   color: white;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 .info_box > section {
   flex: 1;
@@ -76,8 +78,7 @@ input {
   border: none;
   outline: none;
   transition: background-color 0.3s ease;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: 8px;
 }
 input:hover {
   background-color: #777;
