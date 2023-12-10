@@ -555,6 +555,7 @@ function BlackRobotBtn() {
   //manual dehover on mobile
   document.getElementById("black_robot_button").className = 'input-dehover'
   document.getElementById("white_robot_button").className = 'input-dehover'
+  console.log("dehovering")
 
   //change status and trigger play if it is the robot's turn
   if (BlackRobotOn == true) {
