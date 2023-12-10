@@ -214,6 +214,10 @@ buttons.forEach(button => {
   });
 });
 
+document.body.addEventListener("touchstart", function(e){
+  e.preventDefault()
+});
+
 //Handle Moves
 function Locate_Move(mouse_x, mouse_y) {
   located_row = 99
