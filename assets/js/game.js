@@ -202,15 +202,15 @@ buttons.forEach(button => {
   })
   button.addEventListener("touchstart", function(e){
     button.className = "input_hover";
-    e.preventDefault()
+    //e.preventDefault()
   });
   button.addEventListener("touchend", function(e){
     button.className = "input_dehover";
-    e.preventDefault()
+    //e.preventDefault()
   });
   button.addEventListener("touchcancel", function(e){
     button.className = "input_dehover";
-    e.preventDefault()
+    //e.preventDefault()
   });
 });
 
@@ -482,7 +482,8 @@ function CheckForPass() {
   return NoMoves
 }
 
-function Next_Move(located_col, located_row) {
+//was just able to locate a valid move and placed tile; now implementing next turn logic
+function Next_Move(located_col, located_row) {  
   PlayerTurn = PlayerTurn * -1;
   StateState(located_col, located_row); 
   RefreshBoard();
@@ -491,7 +492,10 @@ function Next_Move(located_col, located_row) {
     console.log("pass", PlayerTurn)
     PlayerTurn = PlayerTurn * -1; // change turns again
 
-    //BUG: fatal error when robots are playing and there is a pass
+    //BUG: fatal error when robots are playing and there is a pass; caused by saved
+    //state recording player turn;
+    //solution: on pass, update last save state player turn here?
+
 
     if (CheckForPass()) {
       console.log("double pass", PlayerTurn)
@@ -512,7 +516,7 @@ function Next_Move(located_col, located_row) {
         document.getElementById("black_info").style.border = "3px dashed #777"
         document.getElementById("white_info").style.border = "3px dashed #777"
       }
-    } else {                                              //BUG when robots are passing?
+    } else {
       if (PlayerTurn == -1 && BlackRobotOn) {
         GoRobot();
       } else if (PlayerTurn == 1 && WhiteRobotOn) {
