@@ -507,7 +507,6 @@ function Next_Move(located_col, located_row) {
 
       // stop robots
       PlayerTurn = 0
-      console.log("PlayerTurn: ", PlayerTurn)
 
       // display credits
       if (Black_Count > White_Count) {  //todo: improve game over message
@@ -540,7 +539,7 @@ function Next_Move(located_col, located_row) {
 //Save State & Back Button
 var moves_history = []
 function StateState(located_col, located_row) {       //BUG: not saving state correctly on passes
-  console.log("saving state: ", PlayerTurn, located_col, located_row)
+  //console.log("saving state: ", PlayerTurn, located_col, located_row)
 
   tilec = JSON.parse(JSON.stringify(tile))
   state_history.push([])
