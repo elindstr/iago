@@ -191,21 +191,27 @@ canvasElem.addEventListener("touchend", function(e){
   e.preventDefault()
 }, false)
 
-//manually de-hover to accomodate stupid mobile non-hover capability  
-document.getElementById("newgame_btn").addEventListener("mouseover", function(e){
-  document.getElementById("newgame_btn").className = "input_hover"
-})
-document.getElementById("newgame_btn").addEventListener("mouseout", function(e){
-  document.getElementById("newgame_btn").className = "input_dehover"
-})
-document.getElementById("newgame_btn").addEventListener("touchstart", function(e){
-  newgameBtn.className = "input_hover";
-});
-document.getElementById("newgame_btn").addEventListener("touchend", function(e){
-  newgameBtn.className = "input_dehover";
-});
-document.getElementById("newgame_btn").addEventListener("touchcancel", function(e){
-  newgameBtn.className = "input_dehover";
+//manually de-hover to accomodate stupid mobile non-hover capability
+var buttons = document.querySelectorAll('header input');
+buttons.forEach(button => {  
+  button.addEventListener("mouseover", (e) => {
+    button.className = "input_hover";
+  });
+  button.addEventListener("mouseout", function(e){
+    button.className = "input_dehover"
+  })
+  button.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    button.className = "input_hover";
+  });
+  button.addEventListener("touchend", function(e){
+    e.preventDefault();
+    button.className = "input_dehover";
+  });
+  button.addEventListener("touchcancel", function(e){
+    e.preventDefault();
+    button.className = "input_dehover";
+  });
 });
 
 //Handle Moves
