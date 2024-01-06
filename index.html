@@ -16,9 +16,9 @@
   <main>
 
     <header>
-      <input id="newgame_btn" type="button" value="New" onclick="NewGame()">
+      <button id="newgame_btn" onclick="NewGame()">New</button>
       <h1>iago</h1>
-      <input id="back_btn" type="button" value="Back" onclick="BackBtn()">
+      <button id="back_btn" onclick="BackBtn()">Back</button>
     </header>
 
     <canvas id="main_canvas"></canvas>
@@ -26,14 +26,19 @@
     <section class="info_box">
       <section id="black_info">
         <span>Black:</span>
-        <span id="BlackCount">0</span>
-        <br><input id="black_robot_button" type="button" value="Human" onclick="BlackRobotBtn()">
+        <span id="BlackCount">0</span><br>
+        <label class="switch">
+          <input type="checkbox" id="black_robot_button" onclick="BlackRobotBtn()">
+          <span class="slider round"></span>
+        </label>
       </section>
 
       <section id="white_info">
         <span>White:</span>
-        <span id="WhiteCount">0</span>
-        <br><input id="white_robot_button" type="button" value="Human" onclick="WhiteRobotBtn()">
+        <span id="WhiteCount">0</span><br>
+        <label class="switch">
+          <input type="checkbox" id="white_robot_button" onclick="WhiteRobotBtn()">
+          <span class="slider round"></span>
       </section>
     </section>
 
