@@ -88,9 +88,37 @@ button {
 button:hover {
   background-color: #777;
 }
+.input_hover {
+  background-color: #777;
+}
 .input_dehover {    /*manual dehover on mobile*/
   background-color: #555;
 }
+
+/* game board */
+#gameBoard {
+  display: flex;
+  justify-content: center;
+}
+.cell {
+  display: flex;
+  border: 1px solid black;
+  background-color: green;
+  justify-content: center;
+  align-items: center;
+}
+.lastMove {
+}
+/* .lastMove:after {
+  content: "*";
+  color: red;
+  position: absolute;
+  top: -0px;
+  right: -0px;
+  font-size: 8px;
+  z-index: 10;
+} */
+
 
 /* The switch - the box around the slider */
 .switch {

@@ -6,7 +6,7 @@ var disc_count
 var move_count
 
 function GoRobot() {
-  console.log("robot thinking", PlayerTurn)
+  console.log("robot thinking", playerTurn)
   state_to_evaluatea = state_history[state_history.length-1]    //BUG: When a robot passes, this incorrectly shows no potential moves. 
   state_to_evaluate = JSON.parse(JSON.stringify(state_to_evaluatea))
  

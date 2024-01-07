@@ -1,119 +1,105 @@
 console.log("game.js loaded")
 
-//initialize canvas
-var canvas = document.getElementById("main_canvas");
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
-var ctx = canvas.getContext("2d");
+// global variables
+let tile = []
+let stateHistory = []
+let cellSize
+let tileSize
+const tileBlack = "&#9899;" 
+const tileWhite = "&#9898;" 
+let blackCount = 0
+let whiteCount = 0
+let playerTurn = -1
 
-//todo: implement DPR to improve res
+// initial load
+initTiles()
+resizeCanvas()  //which includes initGameBoard
+NewGame()
 
-//global variables
-var tile = []
-var state_history = []
-var Rows = 8
-var Cols = 8
-var tile_size = 20
-var tile_size_for_drawing = tile_size * .9
-var bottomspace = 200
-var Black_Count = 0
-var White_Count = 0
-var PlayerTurn = -1
-
-Init_Board()
-resizeCanvas()
-
-//resize canvas
+// resize canvas
 window.addEventListener('resize', resizeCanvas, false);
 window.addEventListener('orientationchange', resizeCanvas, false);
 function resizeCanvas() {
-  //fix orientation
-  canvas.width = Math.min(window.innerWidth, window.innerHeight - bottomspace);
-  canvas.height = canvas.width;
+  console.log("resizing")
+  cellSize = Math.min(window.innerWidth, window.innerHeight*.8) / 9
+  tileSize = cellSize * .92
+  initGameBoard()
 
-  //define tile size
-  tile_size = Math.ceil(canvas.width / Rows) - 2;
-  tile_size_for_drawing = tile_size * 0.9;
-
-  RefreshBoard();
 }
 
-//initialize new game
-function NewGame () {
-  Init_Board()
-  RefreshBoard()
+// initialize the board array
+function initTiles () {
+  tile=[]
+  for (col = 0; col < 8; col++){       //x
+    tile.push([])
+    for (row = 0; row < 8; row++){     //y
+    tile[col].push(0)
+    }
+  }
 
+  // create initial four
+  tile[3][3] = 1       //tile[col=x][row=y]
+  tile[4][3] = -1
+  tile[3][4] = -1
+  tile[4][4] = 1
+}
+
+// initialize gameBoard table
+function initGameBoard () {
+  const gameBoard = document.getElementById("gameBoard");
+  gameBoard.innerHTML = ""
+  for (y = 0; y < 8; y++) {
+    let row = document.createElement("div")
+    for (x = 0; x < 8; x++) {
+      let cell = document.createElement("div")
+      cell.classList.add("cell")
+      cell.id = `${x}${y}`
+      cell.style.width = `${cellSize}px`
+      cell.style.height = `${cellSize}px`
+      cell.style.fontSize = `${tileSize}px`
+      row.appendChild(cell)
+    }
+    gameBoard.appendChild(row)
+  }
+  drawBoard()
+}
+
+// initialize new game
+function NewGame() {
+  playerTurn = -1
+  initTiles() // clear tile array
+  initGameBoard() // create and redraw game board 
+
+  // create initial stateHistory
+  stateHistory = [JSON.parse(JSON.stringify(tile))]
+  stateHistory[0].push(playerTurn)  //turn
+
+  // trigger robots
   if (WhiteRobotOn && BlackRobotOn) {
     GoRobot()
   }
 }
 
-function RefreshBoard () {
-  Draw_Board()
-  Draw_Tiles()
-  Draw_InfoBar()
-}
-
-function Init_Board () {
-  PlayerTurn = -1
-
-  //create board array
-  tile=[]
-  for (col = 0; col < Cols; col++){       //x
-    tile.push([])
-    for (row = 0; row < Rows; row++){     //y
-    tile[col].push(0)
-    }
-  }
-
-  //create initial four
-  tile[3][3] = 1       //tile[col=x][row=y]
-  tile[4][3] = -1
-  tile[3][4] = -1
-  tile[4][4] = 1
-
-  //create initial state_history
-  state_history = [JSON.parse(JSON.stringify(tile))]
-  state_history[0].push(PlayerTurn)  //turn
-}
-
-function clear_board (){
-  //create board array
-  tile=[]
-  for (col = 0; col < Cols; col++){       //x
-    tile.push([])
-    for (row = 0; row < Rows; row++){     //y
-    tile[col].push(0)
-    }
-  }
-  //create initial four
-  tile[3][3] = 1       //tile[col=x][row=y]
-  tile[4][3] = -1
-  tile[3][4] = -1
-  tile[4][4] = 1
-}
-
 function update_counts() {
-  Black_Count = 0
-  White_Count = 0
-  for (col = 0; col < Cols; col++){       //x
-    for (row = 0; row < Rows; row++){     //y
+  blackCount = 0
+  whiteCount = 0
+  for (col = 0; col < 8; col++){
+    for (row = 0; row < 8; row++){
       if (tile[col][row] == -1) {
-        Black_Count++
+        blackCount++
       }
       else if (tile[col][row] == 1) {
-        White_Count++
+        whiteCount++
       }
     }
   }
 }
 
-//Prepare Info Bar
-function Draw_InfoBar () {
+function updateInfoBar () {
   update_counts()
-  document.getElementById("BlackCount").innerHTML = Black_Count
-  document.getElementById("WhiteCount").innerHTML = White_Count
-  if (PlayerTurn == -1) {  
+  document.getElementById("BlackCount").innerHTML = blackCount
+  document.getElementById("WhiteCount").innerHTML = whiteCount
+  if (playerTurn == -1) {  
     document.getElementById("black_info").style.border = "3px dashed #777"
     document.getElementById("white_info").style.border = "none"
   }
@@ -123,84 +109,65 @@ function Draw_InfoBar () {
   }
 }
 
-//Draw Tile Borders
-function Draw_Board (){
-  ctx.fillStyle = "green"
-  ctx.fillRect(1, 1, (Cols-1)*tile_size + tile_size, (Rows-1)*tile_size+tile_size);
+function drawBoard() {
+  updateInfoBar()
 
-  ctx.strokeStyle = "black"
-  ctx.strokeRect(1, 1, (Cols-1)*tile_size + tile_size, (Rows-1)*tile_size+tile_size);
-
-  for (col = 0; col < Cols; col++){
-    for (row = 0; row < Rows; row++){
-      //console.log(col, row)
-      ctx.strokeStyle = "black"
-      ctx.strokeRect(col*tile_size, row*tile_size, tile_size, tile_size);
-    }
-  }
-}
-
-function Draw_Tiles() {
-  for (col = 0; col < Cols; col++){
-    for (row = 0; row < Rows; row++){
+  for (col = 0; col < 8; col++){
+    for (row = 0; row < 8; row++){
+      document.getElementById(`${col}${row}`).classList.remove("lastMove")
       if (tile[col][row] == -1) {
-        ctx.fillStyle = "black"
-        ctx.strokeStyle = "black"
-        //console.log(col, row, tile[col][row], ctx.fillStyle, ctx.strokeStyle)
-        ctx.beginPath();
-        ctx.arc(col*tile_size+(tile_size/2), row*tile_size+(tile_size/2), tile_size_for_drawing/2, 0, 2*Math.PI);
-        ctx.fill();
-        ctx.stroke();
+        document.getElementById(`${col}${row}`).innerHTML = tileBlack
       }
       else if (tile[col][row] == 1) {
-        ctx.fillStyle = "white"
-        ctx.strokeStyle = "black"
-        //console.log(col, row, tile[col][row], ctx.fillStyle, ctx.strokeStyle)
-        ctx.beginPath();
-        ctx.arc(col*tile_size+(tile_size/2), row*tile_size+(tile_size/2), tile_size_for_drawing/2, 0, 2*Math.PI);
-        ctx.fill();
-        ctx.stroke();
+        document.getElementById(`${col}${row}`).innerHTML = tileWhite
       }
     }
   }
 
   //last move marker
-  if (state_history.length > 0) {
-    var last_col = state_history[state_history.length-1][9]
-    var last_row = state_history[state_history.length-1][10]
-    ctx.font = "15px Ariel";
-    ctx.fillStyle = "red";
-    ctx.fillText("\xd7", last_col*tile_size+(tile_size/2)-3, last_row*tile_size+(tile_size/2)+3);
+  if (blackCount + whiteCount > 4) {
+    let last_col = stateHistory[stateHistory.length-1][9]
+    let last_row = stateHistory[stateHistory.length-1][10]
+    document.getElementById(`${last_col}${last_row}`).classList.add("lastMove")
   }
 }
 
 //Detect Mouse Moves
-var canvasElem = document.getElementById('main_canvas')
-canvasElem.addEventListener("mouseup", function(e){
-  let rect = canvas.getBoundingClientRect();
-  let mouse_x = e.clientX - rect.left;
-  let mouse_y = e.clientY - rect.top;
-  Locate_Move(mouse_x, mouse_y)
-  e.preventDefault()
-}, false)
-canvasElem.addEventListener("touchend", function(e){
-  let touchobj = e.changedTouches[0]
-  let rect = canvas.getBoundingClientRect();
-  mouse_x = touchobj.clientX - rect.left;
-  mouse_y = touchobj.clientY - rect.top;
-  Locate_Move(mouse_x, mouse_y)
-  e.preventDefault()
-}, false)
+const gameBoard = document.getElementById('gameBoard')
+gameBoard.addEventListener("click", (event) => {
+  //console.log(event.target.id)
+  let move = event.target.id
+  col = move[0]
+  row = move[1]
+  Check_Move(parseInt(col), parseInt(row), "flip")
+})
+
+// var canvasElem = document.getElementById('gameBoard')
+// canvasElem.addEventListener("mouseup", function(e){
+//   let rect = canvas.getBoundingClientRect();
+//   let mouse_x = e.clientX - rect.left;
+//   let mouse_y = e.clientY - rect.top;
+//   Locate_Move(mouse_x, mouse_y)
+//   e.preventDefault()
+// }, false)
+// canvasElem.addEventListener("touchend", function(e){
+//   let touchobj = e.changedTouches[0]
+//   let rect = canvas.getBoundingClientRect();
+//   mouse_x = touchobj.clientX - rect.left;
+//   mouse_y = touchobj.clientY - rect.top;
+//   Locate_Move(mouse_x, mouse_y)
+//   e.preventDefault()
+// }, false)
 
 //manually de-hover to accommodate stupid mobile non-hover capability
 var buttons = document.querySelectorAll('header input');
 buttons.forEach(button => {  
-  button.addEventListener("mouseover", (e) => {
-    button.className = "input_hover";
-  });
-  button.addEventListener("mouseout", function(e){
-    button.className = "input_dehover"
-  })
+  // button.addEventListener("mouseover", (e) => {
+  //   button.className = "input_hover";
+  // });
+  // button.addEventListener("mouseout", function(e){
+  //   button.className = "input_dehover"
+  // })
   button.addEventListener("touchstart", function(e){
     button.className = "input_hover";
     //e.preventDefault()
@@ -216,11 +183,11 @@ buttons.forEach(button => {
 });
 
 //Handle Moves
-function Locate_Move(mouse_x, mouse_y) {
+function Locate_Move(located_row, located_col) {
   located_row = 99
   located_col = 99
-  for (var col = 0; col < Cols; col++){
-    for (var row = 0; row < Rows; row++){
+  for (var col = 0; col < 8; col++){
+    for (var row = 0; row < 8; row++){
       if (mouse_x > (tile_size*col)) {
         if (mouse_x < (tile_size*col) + tile_size) {
           located_col = col
@@ -242,12 +209,14 @@ function Locate_Move(mouse_x, mouse_y) {
 }
 
 function Check_Move(located_col, located_row, command) {        //check moves; and implement flips unless command = ""
+  //console.log("checking move: ", located_row, located_col)
+
   Valid_Move = false
   if (located_col+2 < 8) {
-    if (tile[located_col+1][located_row] == PlayerTurn*-1) {    //right
+    if (tile[located_col+1][located_row] == playerTurn*-1) {    //right
       for (i = 2; i < 8; i++) {
         if (located_col+i < 8) {
-          if (tile[located_col+i][located_row] == PlayerTurn) {
+          if (tile[located_col+i][located_row] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "right", command)
             break
@@ -261,10 +230,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
   }
 
   if ((located_col+2 < 8) && (located_row+2 < 8)) {
-    if (tile[located_col+1][located_row+1] == PlayerTurn*-1) {  //right-down
+    if (tile[located_col+1][located_row+1] == playerTurn*-1) {  //right-down
       for (i = 2; i < 8; i++) {
         if ((located_col+i < 8) && (located_row+i < 8)) {
-          if (tile[located_col+i][located_row+i] == PlayerTurn) {
+          if (tile[located_col+i][located_row+i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "right-down", command)
             break
@@ -277,10 +246,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if (located_row+2 < 8) {
-    if (tile[located_col][located_row+1] == PlayerTurn*-1) {  //down
+    if (tile[located_col][located_row+1] == playerTurn*-1) {  //down
       for (i = 2; i < 8; i++) {
         if (located_row+i < 8) {
-          if (tile[located_col][located_row+i] == PlayerTurn) {
+          if (tile[located_col][located_row+i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "down", command)
             break
@@ -293,10 +262,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if ((located_col-2 >= 0) && (located_row+2 < 8)) {
-    if (tile[located_col-1][located_row+1] == PlayerTurn*-1) {  //down-left
+    if (tile[located_col-1][located_row+1] == playerTurn*-1) {  //down-left
       for (i = 2; i < 8; i++) {
         if ((located_col-i >= 0) && (located_row+i < 8)) {
-          if (tile[located_col-i][located_row+i] == PlayerTurn) {
+          if (tile[located_col-i][located_row+i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "down-left", command)
             break
@@ -309,10 +278,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if (located_col-2 >= 0) {
-    if (tile[located_col-1][located_row] == PlayerTurn*-1) {  //left
+    if (tile[located_col-1][located_row] == playerTurn*-1) {  //left
       for (i = 2; i < 8; i++) {
         if (located_col-i >= 0) {
-          if (tile[located_col-i][located_row] == PlayerTurn) {
+          if (tile[located_col-i][located_row] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "left", command)
             break
@@ -325,10 +294,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if ((located_col-2 >= 0) && (located_row-2 >= 0)) {
-    if (tile[located_col-1][located_row-1] == PlayerTurn*-1) {  //left-up
+    if (tile[located_col-1][located_row-1] == playerTurn*-1) {  //left-up
       for (i = 2; i < 8; i++) {
         if ((located_col-i >= 0) && (located_row-i >= 0)) {
-          if (tile[located_col-i][located_row-i] == PlayerTurn) {
+          if (tile[located_col-i][located_row-i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "left-up", command)
             break
@@ -341,10 +310,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if (located_row-2 >= 0) {
-    if (tile[located_col][located_row-1] == PlayerTurn*-1) {  //up
+    if (tile[located_col][located_row-1] == playerTurn*-1) {  //up
       for (i = 2; i < 8; i++) {
         if (located_row-i >= 0) {
-          if (tile[located_col][located_row-i] == PlayerTurn) {
+          if (tile[located_col][located_row-i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "up", command)
             break
@@ -357,10 +326,10 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
     }
   }
   if ((located_col+2 < 8) && (located_row-2 >= 0)) {
-    if (tile[located_col+1][located_row-1] == PlayerTurn*-1) {  //up-right
+    if (tile[located_col+1][located_row-1] == playerTurn*-1) {  //up-right
       for (i = 2; i < 8; i++) {
         if ((located_col+i < 8) && (located_row-i >= 0)) {
-          if (tile[located_col+i][located_row-i] == PlayerTurn) {
+          if (tile[located_col+i][located_row-i] == playerTurn) {
             Valid_Move = true
             Flip(located_col, located_row, "up-right", command)
             break
@@ -375,20 +344,51 @@ function Check_Move(located_col, located_row, command) {        //check moves; a
 
   if ((Valid_Move == true) && (command != "just_check")) {
     //console.log("Valid_Move: ", Valid_Move)
-    tile[located_col][located_row] = PlayerTurn // place piece
+    tile[located_col][located_row] = playerTurn // place piece
     Next_Move(located_col, located_row)
   }
   return Valid_Move
 }
 
+// TODO: implement
+function flipAnimation (col, row, color) {
+ 
+  const element = document.getElementById('character');
+  element.classList.add('fade-out');
+  setTimeout(() => {
+    // Change the character
+    element.textContent = 'B';
+
+    // Start fade in
+    element.classList.remove('fade-out');
+    element.classList.add('fade-in');
+  }, 1000); // The timeout should match the duration of the fade-out animation
+
+  // CSS:
+  // @keyframes fadeOut {
+  //   from { opacity: 1; }
+  //   to { opacity: 0; }
+  // }
+  // @keyframes fadeIn {
+  //   from { opacity: 0; }
+  //   to { opacity: 1; }
+  // }
+  // .fade-out {
+  //   animation: fadeOut 1s forwards;
+  // }
+  // .fade-in {
+  //   animation: fadeIn 1s forwards;
+  // }
+  }
+
 function Flip(located_col, located_row, direction, command) {
   if (command != "just_check") {
-    //console.log("Flip ", direction)
+    //console.log("Flipping: ", located_col, located_row, direction, command)
 
     if (direction == "right") {
       for (i = 1; i < 8; i++) {
-        if ((located_col+i < 8) && (tile[located_col+i][located_row] == PlayerTurn * -1)) {
-          tile[located_col+i][located_row] = PlayerTurn
+        if ((located_col+i < 8) && (tile[located_col+i][located_row] == playerTurn * -1)) {
+          tile[located_col+i][located_row] = playerTurn
         }
         else {
           break
@@ -397,8 +397,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "right-down") {
       for (i = 1; i < 8; i++) {
-        if ((located_col+i < 8) && (located_row+i < 8) && (tile[located_col+i][located_row+i] == PlayerTurn * -1)) {
-          tile[located_col+i][located_row+i] = PlayerTurn
+        if ((located_col+i < 8) && (located_row+i < 8) && (tile[located_col+i][located_row+i] == playerTurn * -1)) {
+          tile[located_col+i][located_row+i] = playerTurn
         }
         else {
           break
@@ -407,8 +407,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "down") {
       for (i = 1; i < 8; i++) {
-        if ((located_row+i < 8) && (tile[located_col][located_row+i] == PlayerTurn * -1)) {
-          tile[located_col][located_row+i] = PlayerTurn
+        if ((located_row+i < 8) && (tile[located_col][located_row+i] == playerTurn * -1)) {
+          tile[located_col][located_row+i] = playerTurn
         }
         else {
           break
@@ -417,8 +417,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "down-left") {
       for (i = 1; i < 8; i++) {
-        if ((located_col-i >= 0) && (located_row+i < 8) && (tile[located_col-i][located_row+i] == PlayerTurn * -1)) {
-          tile[located_col-i][located_row+i] = PlayerTurn
+        if ((located_col-i >= 0) && (located_row+i < 8) && (tile[located_col-i][located_row+i] == playerTurn * -1)) {
+          tile[located_col-i][located_row+i] = playerTurn
         }
         else {
           break
@@ -427,8 +427,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "left") {
       for (i = 1; i < 8; i++) {
-        if ((located_col-i >= 0) && (tile[located_col-i][located_row] == PlayerTurn * -1)) {
-          tile[located_col-i][located_row] = PlayerTurn
+        if ((located_col-i >= 0) && (tile[located_col-i][located_row] == playerTurn * -1)) {
+          tile[located_col-i][located_row] = playerTurn
         }
         else {
           break
@@ -437,8 +437,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "left-up") {
       for (i = 1; i < 8; i++) {
-        if ((located_col-i >= 0) && (located_row-i >= 0) && (tile[located_col-i][located_row-i] == PlayerTurn * -1)) {
-          tile[located_col-i][located_row-i] = PlayerTurn
+        if ((located_col-i >= 0) && (located_row-i >= 0) && (tile[located_col-i][located_row-i] == playerTurn * -1)) {
+          tile[located_col-i][located_row-i] = playerTurn
         }
         else {
           break
@@ -447,8 +447,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "up") {
       for (i = 1; i < 8; i++) {
-        if ((located_row-i >= 0) && (tile[located_col][located_row-i] == PlayerTurn * -1)) {
-          tile[located_col][located_row-i] = PlayerTurn
+        if ((located_row-i >= 0) && (tile[located_col][located_row-i] == playerTurn * -1)) {
+          tile[located_col][located_row-i] = playerTurn
         }
         else {
           break
@@ -457,8 +457,8 @@ function Flip(located_col, located_row, direction, command) {
     }
     if (direction == "up-right") {
       for (i = 1; i < 8; i++) {
-        if ((located_col+i < 8) && (located_row-i >= 0) && (tile[located_col+i][located_row-i] == PlayerTurn * -1)) {
-          tile[located_col+i][located_row-i] = PlayerTurn
+        if ((located_col+i < 8) && (located_row-i >= 0) && (tile[located_col+i][located_row-i] == playerTurn * -1)) {
+          tile[located_col+i][located_row-i] = playerTurn
         }
         else {
           break
@@ -470,8 +470,8 @@ function Flip(located_col, located_row, direction, command) {
 
 function CheckForPass() {
   NoMoves = true
-  for (col = 0; col < Cols; col++){
-    for (row = 0; row < Rows; row++){
+  for (col = 0; col < 8; col++){
+    for (row = 0; row < 8; row++){
       if (tile[col][row] == 0) {
         if (Check_Move(col, row, "just_check") == true) {
           NoMoves = false
@@ -485,46 +485,46 @@ function CheckForPass() {
 
 //was just able to locate a valid move and placed tile; now implementing next turn logic
 function Next_Move(located_col, located_row) {  
-  PlayerTurn = PlayerTurn * -1;
+  playerTurn = playerTurn * -1;
   StateState(located_col, located_row); 
-  RefreshBoard();
+  drawBoard()
 
   if (CheckForPass()) {
-    console.log("pass", PlayerTurn)
-    PlayerTurn = PlayerTurn * -1; // change turns again
+    //console.log("pass", playerTurn)
+    playerTurn = playerTurn * -1; // change turns again
     
     //changing history so that robots can handle passing
-    state_history[state_history.length-1][8] = state_history[state_history.length-1][8] * -1
+    stateHistory[stateHistory.length-1][8] = stateHistory[stateHistory.length-1][8] * -1
 
     if (CheckForPass()) {
-      console.log("double pass", PlayerTurn)
-      console.log("game over");
+      //console.log("double pass", playerTurn)
+      //console.log("game over");
 
       // stop robots
-      PlayerTurn = 0
+      playerTurn = 0
 
       // display credits
-      if (Black_Count > White_Count) {  //todo: improve game over message
+      if (blackCount > whiteCount) {  //todo: improve game over message
         document.getElementById("black_info").style.border = "3px dashed #777"
         document.getElementById("white_info").style.border = "none"
-      } else if (Black_Count < White_Count) {
+      } else if (blackCount < whiteCount) {
         document.getElementById("black_info").style.border = "none"
         document.getElementById("white_info").style.border = "3px dashed #777"
-      } else if (Black_Count == White_Count) {
+      } else if (blackCount == whiteCount) {
         document.getElementById("black_info").style.border = "3px dashed #777"
         document.getElementById("white_info").style.border = "3px dashed #777"
       }
     } else {
-      if (PlayerTurn == -1 && BlackRobotOn) {
+      if (playerTurn == -1 && BlackRobotOn) {
         GoRobot();
-      } else if (PlayerTurn == 1 && WhiteRobotOn) {
+      } else if (playerTurn == 1 && WhiteRobotOn) {
         GoRobot();
       }
     }
   } else {
-    if (PlayerTurn == -1 && BlackRobotOn) {
+    if (playerTurn == -1 && BlackRobotOn) {
       GoRobot();
-    } else if (PlayerTurn == 1 && WhiteRobotOn) {
+    } else if (playerTurn == 1 && WhiteRobotOn) {
       GoRobot();
     }
   }
@@ -534,39 +534,39 @@ function Next_Move(located_col, located_row) {
 //Save State & Back Button
 var moves_history = []
 function StateState(located_col, located_row) {       //BUG: not saving state correctly on passes
-  //console.log("saving state: ", PlayerTurn, located_col, located_row)
+  //console.log("saving state: ", playerTurn, located_col, located_row)
 
   tilec = JSON.parse(JSON.stringify(tile))
-  state_history.push([])
-  for (col = 0; col < Cols; col++){          //record state (for back button)
-    state_history[state_history.length-1].push([])
-    for (row = 0; row < Rows; row++){
-      state_history[state_history.length-1][col].push(tilec[col][row])
+  stateHistory.push([])
+  for (col = 0; col < 8; col++){          //record state (for back button)
+    stateHistory[stateHistory.length-1].push([])
+    for (row = 0; row < 8; row++){
+      stateHistory[stateHistory.length-1][col].push(tilec[col][row])
     }
   }
-  state_history[state_history.length-1].push(PlayerTurn)
-  state_history[state_history.length-1].push(located_col)
-  state_history[state_history.length-1].push(located_row)
+  stateHistory[stateHistory.length-1].push(playerTurn)
+  stateHistory[stateHistory.length-1].push(located_col)
+  stateHistory[stateHistory.length-1].push(located_row)
 
   //current_move = (located_col) + (located_row)*8      //0...63
   //moves_history.push(current_move)
 }
 
 function BackBtn() {
-  state_history.pop()   //remove last move from moves_history
-  state_historyc = JSON.parse(JSON.stringify(state_history))
+  stateHistory.pop()   //remove last move from moves_history
+  state_historyc = JSON.parse(JSON.stringify(stateHistory))
 
-  clear_board()          //clear tiles
+  initTiles() //clear tiles
 
   if (state_historyc.length > 0) {
 
-    for (col = 0; col < Cols; col++){                           //record state (for back button)
-      for (row = 0; row < Rows; row++){
+    for (col = 0; col < 8; col++){                           //record state (for back button)
+      for (row = 0; row < 8; row++){
         tile[col][row] = state_historyc[state_historyc.length-1][col][row]
       }
     }
-    PlayerTurn = state_historyc[state_historyc.length-1][8]
-    RefreshBoard()
+    playerTurn = state_historyc[state_historyc.length-1][8]
+    drawBoard()
   }
   else {
     NewGame ()
@@ -587,7 +587,7 @@ function BlackRobotBtn() {
     BlackRobotOn = true
     document.getElementById("black_robot_button").style.backgroundColor = '#C8C8C8'
     document.getElementById("black_robot_button").value = "Robot"
-    if (PlayerTurn == -1) {
+    if (playerTurn == -1) {
       GoRobot()
     }
   }
@@ -604,7 +604,7 @@ function WhiteRobotBtn() {
     WhiteRobotOn = true
     document.getElementById("white_robot_button").style.backgroundColor = '#C8C8C8'
     document.getElementById("white_robot_button").value = "Robot"
-    if (PlayerTurn == 1) {
+    if (playerTurn == 1) {
       GoRobot()
     }
   }

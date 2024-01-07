@@ -9,7 +9,7 @@ function RobotMiddleQuads (state_to_evaluate, moves) {
     Potential_MoveX.push(moves[i][0][0])
     Potential_MoveY.push(moves[i][0][1])
   }
-  move_tracker = PlayerTurn
+  move_tracker = playerTurn
   let Moves = moves.length
   var moveX = 0
   var moveY = 0
