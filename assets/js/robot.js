@@ -7,7 +7,7 @@ var move_count
 
 function GoRobot() {
   console.log("robot thinking", playerTurn)
-  state_to_evaluatea = state_history[state_history.length-1]    //BUG: When a robot passes, this incorrectly shows no potential moves. 
+  state_to_evaluatea = stateHistory[stateHistory.length-1]    //BUG: When a robot passes, this incorrectly shows no potential moves. 
   state_to_evaluate = JSON.parse(JSON.stringify(state_to_evaluatea))
  
 
@@ -45,8 +45,8 @@ function get_moves_and_states(state_to_evaluate) {
   potential_states = []
 
   //check moves, report back potential moves and potential states
-  for (col = 0; col < Cols; col++) {
-    for (row = 0; row < Rows; row++) {
+  for (col = 0; col < 8; col++) {
+    for (row = 0; row < 8; row++) {
       if (state_to_evaluate[col][row] == 0) {
         var [potential_moves_input, potential_states_input] = Robot_Find_Moves(col, row, potential_PlayerTurn, state_to_evaluate)
         if (potential_moves_input.length > 0) {
