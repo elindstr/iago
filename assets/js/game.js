@@ -121,6 +121,9 @@ function drawBoard() {
       else if (tile[col][row] == 1) {
         document.getElementById(`${col}${row}`).innerHTML = tileWhite
       }
+      else {
+        document.getElementById(`${col}${row}`).innerHTML = ""
+      }
     }
   }
 
@@ -486,7 +489,7 @@ function CheckForPass() {
 //was just able to locate a valid move and placed tile; now implementing next turn logic
 function Next_Move(located_col, located_row) {  
   playerTurn = playerTurn * -1;
-  StateState(located_col, located_row); 
+  saveState(located_col, located_row); 
   drawBoard()
 
   if (CheckForPass()) {
@@ -530,10 +533,9 @@ function Next_Move(located_col, located_row) {
   }
 }
 
-
 //Save State & Back Button
 var moves_history = []
-function StateState(located_col, located_row) {       //BUG: not saving state correctly on passes
+function saveState(located_col, located_row) {       //BUG: not saving state correctly on passes
   //console.log("saving state: ", playerTurn, located_col, located_row)
 
   tilec = JSON.parse(JSON.stringify(tile))
@@ -559,8 +561,7 @@ function BackBtn() {
   initTiles() //clear tiles
 
   if (state_historyc.length > 0) {
-
-    for (col = 0; col < 8; col++){                           //record state (for back button)
+    for (col = 0; col < 8; col++){
       for (row = 0; row < 8; row++){
         tile[col][row] = state_historyc[state_historyc.length-1][col][row]
       }
