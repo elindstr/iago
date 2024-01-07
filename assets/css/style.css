@@ -121,6 +121,21 @@ button:hover {
 
 
 /* The switch - the box around the slider */
+.robotToggleContainer {
+  border:1px solid black;
+  border-radius: 10px;
+  background-color:#777;
+  display: inline-block;
+  padding: 3px;
+  width: 110px
+}
+.robotToggleLabel {
+  font-size: 16px !important;
+  text-align: center;
+  vertical-align: middle;
+  float: left;
+  padding: 3px;
+}
 .switch {
   position: relative;
   display: inline-block;

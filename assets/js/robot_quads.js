@@ -107,7 +107,7 @@ function RobotMiddleQuads (state_to_evaluate, moves) {
   var Mod_Potential_MoveX2 = JSON.parse(JSON.stringify(Mod_Potential_MoveX))
   var Mod_Potential_MoveY2 = JSON.parse(JSON.stringify(Mod_Potential_MoveY))
 
-  for (var i = Mod_Potential_MoveX2.length-1; i = 0; i--) {
+  for (var i = Mod_Potential_MoveX2.length-1; i >= 0; i--) {
   //for i in (0...Mod_Potential_MoveX2.length-1).reversed() {
       if ((state_to_evaluate[0][0] != move_tracker) && (state_to_evaluate[1][0] != move_tracker) && (state_to_evaluate[2][0] != move_tracker)) {
           if ((Mod_Potential_MoveX[i] == 0) && (Mod_Potential_MoveY[i] == 3) && (Mod_Potential_MoveX2.length > 0)){
@@ -168,7 +168,7 @@ function RobotMiddleQuads (state_to_evaluate, moves) {
   var Mod_Potential_MoveX3 = JSON.parse(JSON.stringify(Mod_Potential_MoveX2))
   var Mod_Potential_MoveY3 = JSON.parse(JSON.stringify(Mod_Potential_MoveY2))
 
-  for (var i = Mod_Potential_MoveX3.length-1; i = 0; i--) {
+  for (var i = Mod_Potential_MoveX3.length-1; i >= 0; i--) {
   //for i in (0...Mod_Potential_MoveX3.length-1).reversed() {
       if ((state_to_evaluate[0][0] != move_tracker) && (state_to_evaluate[1][0] != move_tracker)) {
           if ((Mod_Potential_MoveX2[i] == 0) && (Mod_Potential_MoveY2[i] == 2) && (Mod_Potential_MoveX3.length > 0)) {
@@ -228,7 +228,7 @@ function RobotMiddleQuads (state_to_evaluate, moves) {
   var Mod_Potential_MoveX4 = JSON.parse(JSON.stringify(Mod_Potential_MoveX3))
   var Mod_Potential_MoveY4 = JSON.parse(JSON.stringify(Mod_Potential_MoveY3))
   if (Moves < 16) {
-      for (var i = Mod_Potential_MoveX4.length-1; i = 0; i--) {
+      for (var i = Mod_Potential_MoveX4.length-1; i >= 0; i--) {
       //for i in (0...Mod_Potential_MoveX4.length-1).reversed() {
 
           if ((Mod_Potential_MoveX3[i] == 0) && (Mod_Potential_MoveX4.length > 0) ) {
@@ -331,7 +331,7 @@ function RobotMiddleQuads (state_to_evaluate, moves) {
 
   if (Moves > 30) {
       //take corner
-      for (var i = Mod_Potential_MoveX4.length-1; i = 0; i--) {
+      for (var i = Mod_Potential_MoveX4.length-1; i >= 0; i--) {
       //for i in (0...Mod_Potential_MoveX4.length-1).reversed() {
           if ((Mod_Potential_MoveX4[i] == 0) && (Mod_Potential_MoveY4[i] == 0) ){
               moveX = Mod_Potential_MoveX4[i]

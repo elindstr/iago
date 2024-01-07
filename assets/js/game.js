@@ -582,12 +582,14 @@ function BlackRobotBtn() {
   if (BlackRobotOn == true) {
     BlackRobotOn = false
     document.getElementById("black_robot_button").style.backgroundColor = '';
-    document.getElementById("black_robot_button").value = "Human"
+    document.getElementById("blackrobotToggleLabel").textContent = "Human"
+    //document.getElementById("blackrobotToggleLabel").style.float = "left"
   }
   else {
     BlackRobotOn = true
     document.getElementById("black_robot_button").style.backgroundColor = '#C8C8C8'
-    document.getElementById("black_robot_button").value = "Robot"
+    document.getElementById("blackrobotToggleLabel").textContent = "Robot"
+    //document.getElementById("blackrobotToggleLabel").style.float = "right"
     if (playerTurn == -1) {
       GoRobot()
     }
@@ -598,13 +600,13 @@ function WhiteRobotBtn() {
   if (WhiteRobotOn == true) {
     WhiteRobotOn = false
     document.getElementById("white_robot_button").style.backgroundColor = ''
-    document.getElementById("white_robot_button").value = "Human"
+    document.getElementById("whiterobotToggleLabel").textContent = "Human"
     
   }
   else {
     WhiteRobotOn = true
     document.getElementById("white_robot_button").style.backgroundColor = '#C8C8C8'
-    document.getElementById("white_robot_button").value = "Robot"
+    document.getElementById("whiterobotToggleLabel").textContent = "Robot"
     if (playerTurn == 1) {
       GoRobot()
     }
